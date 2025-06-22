@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { cn } from '@/utilities/ui'
 import { PortfolioCard } from '../CardPortfolio'
+import { AnimatePresence, motion } from 'framer-motion'
 
 type Category = {
   id: string
@@ -48,21 +49,37 @@ export const CollectionArchive: React.FC<Props> = ({ items, categories }) => {
 
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredItems.length > 0 ? (
-          filteredItems.map((item, index) => (
-            <PortfolioCard
-              key={index}
-              className="h-[280px]"
-              doc={item}
-              relationTo="portfolio"
-              showCategories
-            />
-          ))
-        ) : (
-          <div className="col-span-full text-center text-gray-500 py-8">
-            Geen portfolio items gevonden voor deze categorie.
-          </div>
-        )}
+        <AnimatePresence mode="popLayout">
+          {filteredItems.length > 0 ? (
+            filteredItems.map((item, index) => (
+              <motion.div
+                key={item.id}
+                layout
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <PortfolioCard
+                  className="h-[280px]"
+                  doc={item}
+                  relationTo="portfolio"
+                  showCategories
+                />
+              </motion.div>
+            ))
+          ) : (
+            <motion.div
+              className="col-span-full text-center text-gray-500 py-8"
+              key="empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              Geen portfolio items gevonden voor deze categorie.
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   )
