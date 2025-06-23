@@ -195,7 +195,15 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | PortfolioGalleryBlock)[];
+  layout: (
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | FormBlock
+    | PortfolioGalleryBlock
+    | AboutMeBlock
+  )[];
   meta?: {
     title?: string | null;
     /**
@@ -813,6 +821,39 @@ export interface PortfolioGalleryBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutMeBlock".
+ */
+export interface AboutMeBlock {
+  title: string;
+  text?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  height?: string | null;
+  shoeSize?: string | null;
+  details?: {
+    location?: string | null;
+    camera?: string | null;
+    time?: string | null;
+  };
+  image?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'aboutMe';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1111,6 +1152,7 @@ export interface PagesSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         portfolioGallery?: T | PortfolioGalleryBlockSelect<T>;
+        aboutMe?: T | AboutMeBlockSelect<T>;
       };
   meta?:
     | T
@@ -1217,6 +1259,26 @@ export interface FormBlockSelect<T extends boolean = true> {
 export interface PortfolioGalleryBlockSelect<T extends boolean = true> {
   introContent?: T;
   limit?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutMeBlock_select".
+ */
+export interface AboutMeBlockSelect<T extends boolean = true> {
+  title?: T;
+  text?: T;
+  height?: T;
+  shoeSize?: T;
+  details?:
+    | T
+    | {
+        location?: T;
+        camera?: T;
+        time?: T;
+      };
+  image?: T;
   id?: T;
   blockName?: T;
 }
