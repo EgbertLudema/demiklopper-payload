@@ -14,8 +14,9 @@ interface HeaderClientProps {
 }
 
 export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
-  /* Storing the value in a useState to avoid hydration errors */
   const [theme, setTheme] = useState<string | null>(null)
+  const [isSticky, setIsSticky] = useState(false)
+
   const { headerTheme, setHeaderTheme } = useHeaderTheme()
   const pathname = usePathname()
 
@@ -29,13 +30,27 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headerTheme])
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsSticky(window.scrollY > 20)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
-    <header className="container relative z-20   " {...(theme ? { 'data-theme': theme } : {})}>
-      <div className="py-8 flex justify-between">
-        <Link href="/">
-          <Logo loading="eager" priority="high" className="invert dark:invert-0" />
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isSticky ? 'bg-white/80 backdrop-blur-md py-4 shadow-md' : 'bg-transparent py-8'
+      }`}
+      {...(theme ? { 'data-theme': theme } : {})}
+    >
+      <div className="container flex justify-between items-center transition-all duration-300">
+        <Link href="/" className="transition-opacity duration-300">
+          <Logo isSticky={isSticky} />
         </Link>
-        <HeaderNav data={data} />
+        <HeaderNav data={data} isSticky={isSticky} />
       </div>
     </header>
   )
