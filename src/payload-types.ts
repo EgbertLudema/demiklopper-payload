@@ -599,6 +599,7 @@ export interface PortfolioCategory {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
+  formTitle?: string | null;
   form: number | Form;
   enableIntro?: boolean | null;
   introContent?: {
@@ -616,6 +617,26 @@ export interface FormBlock {
     };
     [k: string]: unknown;
   } | null;
+  enableInfo?: boolean | null;
+  infoBlock?: {
+    content?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    location?: string | null;
+    instagram?: string | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'formBlock';
@@ -1246,9 +1267,18 @@ export interface ArchiveBlockSelect<T extends boolean = true> {
  * via the `definition` "FormBlock_select".
  */
 export interface FormBlockSelect<T extends boolean = true> {
+  formTitle?: T;
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  enableInfo?: T;
+  infoBlock?:
+    | T
+    | {
+        content?: T;
+        location?: T;
+        instagram?: T;
+      };
   id?: T;
   blockName?: T;
 }

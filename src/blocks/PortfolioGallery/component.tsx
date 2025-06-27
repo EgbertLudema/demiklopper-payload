@@ -5,6 +5,7 @@ import configPromise from '@payload-config'
 import type { PortfolioGalleryBlock } from '@/payload-types'
 import { CollectionArchive } from '@/components/CollectionArchivePortfolio'
 import RichText from '@/components/RichText'
+import { AnimatedIntro } from '@/components/AnimatedIntro'
 
 export const PortfolioGalleryBlock = async ({
   id,
@@ -46,11 +47,7 @@ export const PortfolioGalleryBlock = async ({
 
   return (
     <div className="my-16" id={`block-${id}`}>
-      {introContent && (
-        <div className="container mb-16">
-          <RichText className="ms-0 max-w-[48rem]" data={introContent} enableGutter={false} />
-        </div>
-      )}
+      {introContent && <AnimatedIntro introContent={introContent} />}
       <CollectionArchive
         items={fetched.docs}
         categories={categoriesRes.docs.map((cat) => ({

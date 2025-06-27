@@ -30,7 +30,7 @@ export const PortfolioCard: React.FC<{
 
   return (
     <article
-      className={cn('group relative w-full h-full overflow-hidden rounded-lg', className)}
+      className={cn('group relative w-full h-full overflow-hidden rounded-xl', className)}
       ref={card.ref}
     >
       <Link href={href} ref={link.ref} className="block w-full h-full">
