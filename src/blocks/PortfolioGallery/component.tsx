@@ -1,16 +1,17 @@
+'use server'
+
 import { cookies } from 'next/headers'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
-import type { PortfolioGalleryBlock } from '@/payload-types'
-import { CollectionArchive } from '@/components/CollectionArchivePortfolio'
-import RichText from '@/components/RichText'
 import { AnimatedIntro } from '@/components/AnimatedIntro'
+import { ClientRenderer } from './ClientRenderer'
 
 export const PortfolioGalleryBlock = async ({
   id,
   introContent,
   limit: limitFromProps,
+  replaceLoadMoreWithLink,
 }: PortfolioGalleryBlock & { id?: string }) => {
   const cookieStore = cookies()
   const search = cookieStore.get('next-url')?.value
@@ -19,7 +20,6 @@ export const PortfolioGalleryBlock = async ({
 
   const payload = await getPayload({ config: configPromise })
 
-  // Fetch all categories to resolve the slug
   const categoriesRes = await payload.find({
     collection: 'portfolio-categories',
     limit: 100,
@@ -27,33 +27,30 @@ export const PortfolioGalleryBlock = async ({
 
   const activeCategory = categoriesRes.docs.find((cat) => cat.slug === urlSlug)
   const categoryId = activeCategory?.id
-
   const limit = typeof limitFromProps === 'number' ? limitFromProps : 12
-
-  const where = categoryId
-    ? {
-        categories: { in: [categoryId] },
-      }
-    : {}
 
   const fetched = await payload.find({
     collection: 'portfolio',
-    where,
+    where: categoryId ? { categories: { in: [categoryId] } } : {},
     limit,
     depth: 1,
+    page: 1,
   })
-
-  const items = fetched.docs
 
   return (
     <div className="my-16" id={`block-${id}`}>
       {introContent && <AnimatedIntro introContent={introContent} />}
-      <CollectionArchive
-        items={fetched.docs}
+      <ClientRenderer
+        initialItems={fetched.docs}
+        initialTotalDocs={fetched.totalDocs}
         categories={categoriesRes.docs.map((cat) => ({
-          ...cat,
           id: String(cat.id),
+          slug: cat.slug,
+          title: cat.title,
         }))}
+        categoryId={categoryId}
+        replaceLoadMoreWithLink={replaceLoadMoreWithLink}
+        limit={limit}
       />
     </div>
   )

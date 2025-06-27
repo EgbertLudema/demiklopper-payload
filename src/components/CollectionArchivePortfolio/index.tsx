@@ -35,7 +35,7 @@ const itemVariant = {
   },
 }
 
-export const CollectionArchive: React.FC<Props> = ({ items, categories }) => {
+export const CollectionArchive: React.FC<Props> = ({ items = [], categories = [] }) => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
   const filteredItems = activeCategory

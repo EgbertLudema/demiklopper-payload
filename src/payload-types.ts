@@ -836,6 +836,7 @@ export interface PortfolioGalleryBlock {
     [k: string]: unknown;
   } | null;
   limit?: number | null;
+  replaceLoadMoreWithLink?: boolean | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'portfolioGallery';
@@ -1289,6 +1290,7 @@ export interface FormBlockSelect<T extends boolean = true> {
 export interface PortfolioGalleryBlockSelect<T extends boolean = true> {
   introContent?: T;
   limit?: T;
+  replaceLoadMoreWithLink?: T;
   id?: T;
   blockName?: T;
 }

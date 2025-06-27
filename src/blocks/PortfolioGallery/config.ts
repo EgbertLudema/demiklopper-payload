@@ -33,8 +33,13 @@ export const PortfolioGallery: Block = {
       type: 'number',
       defaultValue: 12,
       admin: {
-        step: 1,
+        step: 3,
       },
+    },
+    {
+      name: 'replaceLoadMoreWithLink',
+      type: 'checkbox',
+      label: 'Vervang "Laad meer" knop met link naar portfolio pagina',
     },
   ],
 }
