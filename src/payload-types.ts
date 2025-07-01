@@ -195,7 +195,15 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock | PortfolioGalleryBlock)[];
+  layout: (
+    | CallToActionBlock
+    | ContentBlock
+    | MediaBlock
+    | ArchiveBlock
+    | FormBlock
+    | PortfolioGalleryBlock
+    | AboutMeBlock
+  )[];
   meta?: {
     title?: string | null;
     /**
@@ -544,6 +552,7 @@ export interface ArchiveBlock {
 export interface Portfolio {
   id: number;
   title: string;
+  publishedOn?: string | null;
   image: number | Media;
   content?: {
     root: {
@@ -591,6 +600,7 @@ export interface PortfolioCategory {
  * via the `definition` "FormBlock".
  */
 export interface FormBlock {
+  formTitle?: string | null;
   form: number | Form;
   enableIntro?: boolean | null;
   introContent?: {
@@ -608,6 +618,26 @@ export interface FormBlock {
     };
     [k: string]: unknown;
   } | null;
+  enableInfo?: boolean | null;
+  infoBlock?: {
+    content?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    location?: string | null;
+    instagram?: string | null;
+  };
   id?: string | null;
   blockName?: string | null;
   blockType: 'formBlock';
@@ -807,9 +837,43 @@ export interface PortfolioGalleryBlock {
     [k: string]: unknown;
   } | null;
   limit?: number | null;
+  replaceLoadMoreWithLink?: boolean | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'portfolioGallery';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutMeBlock".
+ */
+export interface AboutMeBlock {
+  title: string;
+  text?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  height?: string | null;
+  shoeSize?: string | null;
+  details?: {
+    location?: string | null;
+    camera?: string | null;
+    time?: string | null;
+  };
+  image?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'aboutMe';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1111,6 +1175,7 @@ export interface PagesSelect<T extends boolean = true> {
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
         portfolioGallery?: T | PortfolioGalleryBlockSelect<T>;
+        aboutMe?: T | AboutMeBlockSelect<T>;
       };
   meta?:
     | T
@@ -1204,9 +1269,18 @@ export interface ArchiveBlockSelect<T extends boolean = true> {
  * via the `definition` "FormBlock_select".
  */
 export interface FormBlockSelect<T extends boolean = true> {
+  formTitle?: T;
   form?: T;
   enableIntro?: T;
   introContent?: T;
+  enableInfo?: T;
+  infoBlock?:
+    | T
+    | {
+        content?: T;
+        location?: T;
+        instagram?: T;
+      };
   id?: T;
   blockName?: T;
 }
@@ -1217,6 +1291,27 @@ export interface FormBlockSelect<T extends boolean = true> {
 export interface PortfolioGalleryBlockSelect<T extends boolean = true> {
   introContent?: T;
   limit?: T;
+  replaceLoadMoreWithLink?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutMeBlock_select".
+ */
+export interface AboutMeBlockSelect<T extends boolean = true> {
+  title?: T;
+  text?: T;
+  height?: T;
+  shoeSize?: T;
+  details?:
+    | T
+    | {
+        location?: T;
+        camera?: T;
+        time?: T;
+      };
+  image?: T;
   id?: T;
   blockName?: T;
 }
@@ -1257,6 +1352,7 @@ export interface PostsSelect<T extends boolean = true> {
  */
 export interface PortfolioSelect<T extends boolean = true> {
   title?: T;
+  publishedOn?: T;
   image?: T;
   content?: T;
   categories?: T;

@@ -16,7 +16,26 @@ type Props = {
   categories: Category[]
 }
 
-export const CollectionArchive: React.FC<Props> = ({ items, categories }) => {
+const itemVariant = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.1,
+      duration: 0.5,
+      ease: 'easeOut',
+    },
+  }),
+  exit: {
+    opacity: 0,
+    y: -10,
+    scale: 0.95,
+    transition: { duration: 0.2 },
+  },
+}
+
+export const CollectionArchive: React.FC<Props> = ({ items = [], categories = [] }) => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
   const filteredItems = activeCategory
@@ -25,29 +44,33 @@ export const CollectionArchive: React.FC<Props> = ({ items, categories }) => {
 
   return (
     <div className={cn('container')}>
-      {/* Filter Buttons */}
-      <div className="flex flex-wrap gap-2 mb-8">
-        <button
+      {/* Filter Buttons met animatie */}
+      <motion.div className="flex flex-wrap gap-2 mb-8" initial="hidden" animate="visible">
+        <motion.button
+          variants={itemVariant}
+          custom={0}
           onClick={() => setActiveCategory(null)}
-          className={cn('border px-3 py-1 rounded', !activeCategory && 'bg-primary text-white')}
+          className={cn('border px-3 py-1 rounded-lg', !activeCategory && 'bg-primary text-white')}
         >
-          All
-        </button>
-        {categories.map((cat) => (
-          <button
+          Alles
+        </motion.button>
+        {categories.map((cat, index) => (
+          <motion.button
             key={cat.id}
+            variants={itemVariant}
+            custom={index + 1}
             onClick={() => setActiveCategory(cat.slug)}
             className={cn(
-              'border px-3 py-1 rounded',
+              'border px-3 py-1 rounded-lg',
               activeCategory === cat.slug && 'bg-primary text-white',
             )}
           >
             {cat.title}
-          </button>
+          </motion.button>
         ))}
-      </div>
+      </motion.div>
 
-      {/* Grid */}
+      {/* Grid met animatie per item */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <AnimatePresence mode="popLayout">
           {filteredItems.length > 0 ? (
@@ -55,10 +78,12 @@ export const CollectionArchive: React.FC<Props> = ({ items, categories }) => {
               <motion.div
                 key={item.id}
                 layout
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                transition={{ duration: 0.3 }}
+                variants={itemVariant}
+                initial="hidden"
+                whileInView="visible"
+                exit="exit"
+                viewport={{ once: true, amount: 0.2 }}
+                custom={index}
               >
                 <PortfolioCard
                   className="h-[280px]"

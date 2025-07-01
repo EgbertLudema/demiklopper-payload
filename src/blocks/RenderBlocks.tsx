@@ -7,7 +7,8 @@ import { CallToActionBlock } from '@/blocks/CallToAction/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
-import { PortfolioGalleryBlock } from './PortfolioGallery/component'
+import { PortfolioGalleryBlock } from '@/blocks/PortfolioGallery/component'
+import { AboutMeBlock } from '@/blocks/AboutMe/component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -15,6 +16,7 @@ const blockComponents = {
   cta: CallToActionBlock,
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
+  aboutMe: AboutMeBlock,
   portfolioGallery: PortfolioGalleryBlock,
 }
 
