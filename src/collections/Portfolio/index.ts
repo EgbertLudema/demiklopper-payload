@@ -30,7 +30,7 @@ export const Portfolio: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'updatedAt'],
+    defaultColumns: ['title', 'slug', 'publishedOn', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) =>
         generatePreviewPath({
@@ -51,6 +51,15 @@ export const Portfolio: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+    },
+    {
+      name: 'publishedOn',
+      label: 'Date',
+      type: 'date',
+      admin: {
+        position: 'sidebar',
+      },
+      defaultValue: () => new Date(),
     },
     {
       name: 'image',

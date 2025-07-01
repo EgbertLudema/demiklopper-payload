@@ -54,7 +54,7 @@ export const AboutMeBlock: React.FC<Props> = ({
             transition={{ duration: 0.6, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            <h2 className="relative text-2xl font-bold mb-8 after:content-[''] after:block after:h-[3px] after:w-[70px] after:bg-sky-400 after:mt-2">
+            <h2 className="relative text-4xl font-bold mb-8 after:content-[''] after:block after:h-[3px] after:w-[70px] after:bg-sky-400 after:mt-2">
               {title}
             </h2>
 

@@ -23,8 +23,11 @@ const buttonVariants = cva(
         destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
         ghost: 'hover:bg-card hover:text-accent-foreground',
         link: 'text-primary items-start justify-start underline-offset-4 hover:underline',
-        linkWhite: 'text-white items-start justify-start underline-offset-4 hover:underline',
-        linkBlack: 'text-black items-start justify-start underline-offset-4 hover:underline',
+        linkWhite:
+          'relative group text-white px-1 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full',
+        linkBlack:
+          'relative group text-black px-1 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full',
+
         outline: 'border border-border bg-background hover:bg-card hover:text-accent-foreground',
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         white: 'bg-white text-black hover:bg-gray-100',

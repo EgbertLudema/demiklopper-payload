@@ -552,6 +552,7 @@ export interface ArchiveBlock {
 export interface Portfolio {
   id: number;
   title: string;
+  publishedOn?: string | null;
   image: number | Media;
   content?: {
     root: {
@@ -1351,6 +1352,7 @@ export interface PostsSelect<T extends boolean = true> {
  */
 export interface PortfolioSelect<T extends boolean = true> {
   title?: T;
+  publishedOn?: T;
   image?: T;
   content?: T;
   categories?: T;

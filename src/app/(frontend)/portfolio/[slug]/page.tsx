@@ -59,7 +59,9 @@ export default async function Post({ params: paramsPromise }: Args) {
       {draft && <LivePreviewListener />}
 
       <div className="flex flex-col items-center gap-4 pt-8">
-        <div className="container">{/* Content */}</div>
+        <div className="container">
+          <p>Content here...</p>
+        </div>
       </div>
     </article>
   )
