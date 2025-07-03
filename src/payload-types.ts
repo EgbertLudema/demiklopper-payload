@@ -1798,6 +1798,10 @@ export interface Header {
  */
 export interface Footer {
   id: number;
+  column1: {
+    title: string;
+    text?: string | null;
+  };
   navItems?:
     | {
         link: {
@@ -1815,6 +1819,25 @@ export interface Footer {
           url?: string | null;
           label: string;
         };
+        id?: string | null;
+      }[]
+    | null;
+  column3?: {
+    titel?: string | null;
+    location?: string | null;
+    /**
+     * Gebruik nieuwe regels om meerdere items op te geven.
+     */
+    text?: string | null;
+  };
+  column4?: {
+    titel?: string | null;
+    text?: string | null;
+  };
+  socials?:
+    | {
+        platform: 'instagram' | 'facebook' | 'linkedin' | 'twitter' | 'tiktok';
+        url: string;
         id?: string | null;
       }[]
     | null;
@@ -1849,6 +1872,12 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
+  column1?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+      };
   navItems?:
     | T
     | {
@@ -1861,6 +1890,26 @@ export interface FooterSelect<T extends boolean = true> {
               url?: T;
               label?: T;
             };
+        id?: T;
+      };
+  column3?:
+    | T
+    | {
+        titel?: T;
+        location?: T;
+        text?: T;
+      };
+  column4?:
+    | T
+    | {
+        titel?: T;
+        text?: T;
+      };
+  socials?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
         id?: T;
       };
   updatedAt?: T;
