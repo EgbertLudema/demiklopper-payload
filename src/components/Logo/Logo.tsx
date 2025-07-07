@@ -2,15 +2,15 @@ import React from 'react'
 import clsx from 'clsx'
 
 interface LogoProps {
-  isSticky?: boolean
+  isWhite?: boolean
 }
 
-export const Logo: React.FC<LogoProps> = ({ isSticky }) => {
+export const Logo: React.FC<LogoProps> = ({ isWhite }) => {
   return (
     <p
       className={clsx(
         'text-3xl font-semibold flex items-center gap-2 transition-colors duration-300',
-        isSticky ? 'text-black' : 'text-white',
+        isWhite ? 'text-white' : 'text-black',
       )}
     >
       DK

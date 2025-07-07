@@ -17,6 +17,9 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
   const [isSticky, setIsSticky] = useState(false)
   const pathname = usePathname()
 
+  const isHomePage = pathname === '/'
+  const isWhite = isHomePage && !isSticky
+
   useEffect(() => {
     const handleScroll = () => {
       setIsSticky(window.scrollY > 20)
@@ -34,9 +37,9 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
     >
       <div className="container flex justify-between items-center transition-all duration-300">
         <Link href="/" className="transition-opacity duration-300">
-          <Logo isSticky={isSticky} />
+          <Logo isWhite={isWhite} />
         </Link>
-        <HeaderNav data={data} isSticky={isSticky} />
+        <HeaderNav data={data} isWhite={isWhite} />
       </div>
     </header>
   )
