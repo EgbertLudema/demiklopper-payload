@@ -13,6 +13,7 @@ import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { PortfolioHero } from '@/heros/PortfolioHero'
 import Image from 'next/image'
 import { DownloadButton } from '@/components/ui/downloadButton'
+import { RelatedPortfolioSlider } from '@/components/RelatedPortfolioSlider'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -45,8 +46,10 @@ export default async function Post({ params: paramsPromise }: Args) {
   const { slug = '' } = await paramsPromise
   const url = '/portfolio/' + slug
   const portfolio = await queryPostBySlug({ slug })
-
-  console.log('portfolio', portfolio)
+  const relatedItems = await fetchRelatedItems({
+    categories: portfolio.categories ?? [],
+    currentId: portfolio.id,
+  })
 
   if (!portfolio) return <PayloadRedirects url={url} />
 
@@ -133,6 +136,7 @@ export default async function Post({ params: paramsPromise }: Args) {
         </div>
       </div>
       {/* Add related posts using category */}
+      <RelatedPortfolioSlider items={relatedItems} />
     </article>
   )
 }
@@ -165,3 +169,38 @@ const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
 
   return result.docs?.[0] || null
 })
+
+const fetchRelatedItems = cache(
+  async ({ categories, currentId }: { categories: any[]; currentId: string }) => {
+    if (!categories.length) return []
+
+    const payload = await getPayload({ config: configPromise })
+
+    const categoryIds = categories.map((cat) => (typeof cat === 'object' ? cat.id : cat))
+
+    const result = await payload.find({
+      collection: 'portfolio',
+      where: {
+        id: { not_equals: currentId },
+        categories: {
+          in: categoryIds,
+        },
+      },
+      limit: 3,
+      depth: 1,
+      draft: false,
+      pagination: false,
+    })
+
+    return result.docs.map((doc) => ({
+      id: doc.id,
+      slug: doc.slug,
+      title: doc.title,
+      publishedOn: doc.publishedOn ?? '',
+      categories: doc.categories ?? [],
+      meta: {
+        image: doc.meta?.image ?? doc.image ?? null,
+      },
+    }))
+  },
+)
