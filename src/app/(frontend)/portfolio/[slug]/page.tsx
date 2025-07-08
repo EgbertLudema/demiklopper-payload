@@ -110,9 +110,12 @@ export default async function Post({ params: paramsPromise }: Args) {
 
                     {portfolio.publishedOn && (
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Jaar:</span>
+                        <span className="text-gray-600">Datum:</span>
                         <span className="font-medium">
-                          {new Date(portfolio.publishedOn).getFullYear()}
+                          {new Date(portfolio.publishedOn).toLocaleDateString('nl-NL', {
+                            year: 'numeric',
+                            month: 'long',
+                          })}
                         </span>
                       </div>
                     )}

@@ -78,7 +78,7 @@ export async function Footer() {
 
       {/* Onderste balk */}
       <div className="container py-6 px-2 border-t border-sky-600 flex flex-col md:flex-row justify-between items-center">
-        <div className="flex flex-col md:flex-row items-center gap-2 mb-4 md:mb-0">
+        <div className="text-xs flex flex-col md:flex-row items-center gap-2 mb-4 md:mb-0">
           <p className="text-blue-300">&copy; {year} Demi Klopper. Alle rechten voorbehouden.</p>
           <p className="text-blue-300">
             Gerealiseerd door{' '}
