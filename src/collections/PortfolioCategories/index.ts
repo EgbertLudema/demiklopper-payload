@@ -19,4 +19,7 @@ export const PortfolioCategories: CollectionConfig = {
       unique: true,
     },
   ],
+  access: {
+    read: () => true,
+  },
 }

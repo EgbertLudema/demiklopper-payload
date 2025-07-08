@@ -46,6 +46,8 @@ export default async function Post({ params: paramsPromise }: Args) {
   const url = '/portfolio/' + slug
   const portfolio = await queryPostBySlug({ slug })
 
+  console.log('portfolio', portfolio)
+
   if (!portfolio) return <PayloadRedirects url={url} />
 
   return (
@@ -78,7 +80,7 @@ export default async function Post({ params: paramsPromise }: Args) {
               <div className="lg:col-span-2 space-y-6">
                 {portfolio.content ? (
                   <div className="text-gray-700 text-lg">
-                    <RichText data={portfolio.content} />
+                    <RichText enableGutter={false} data={portfolio.content} />
                   </div>
                 ) : (
                   <p className="text-gray-600 leading-relaxed text-lg">
@@ -86,19 +88,23 @@ export default async function Post({ params: paramsPromise }: Args) {
                   </p>
                 )}
 
-                <div className="bg-gray-50 rounded-lg p-6">
+                <div className="bg-gray-100 rounded-xl p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Project Details</h3>
                   <div className="space-y-3">
                     {(portfolio.categories ?? []).length > 0 && (
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Categorie:</span>
+                        <span className="text-gray-600">
+                          {(portfolio.categories?.length ?? 0) > 1 ? 'Categorieën:' : 'Categorie:'}
+                        </span>
+
                         <span className="font-medium">
                           {(portfolio.categories ?? [])
-                            .map((cat: any) => cat.label || cat.title || cat.name)
+                            .map((cat: any) => (typeof cat === 'object' ? cat.title : 'Onbekend'))
                             .join(', ')}
                         </span>
                       </div>
                     )}
+
                     {portfolio.publishedOn && (
                       <div className="flex justify-between">
                         <span className="text-gray-600">Jaar:</span>
