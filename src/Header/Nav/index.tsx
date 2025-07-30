@@ -17,7 +17,7 @@ export const HeaderNav: React.FC<{ data: HeaderType; isWhite?: boolean }> = ({ d
       {navItems.map(({ link }, i) => {
         return <CMSLink key={i} {...link} appearance={isWhite ? 'linkWhite' : 'linkBlack'} />
       })}
-      <Link href="/search">
+      <Link href="/zoeken">
         <span className="sr-only">Zoek</span>
         <SearchIcon
           className={cn('w-5 transition-colors', isWhite ? 'text-white' : 'text-black')}

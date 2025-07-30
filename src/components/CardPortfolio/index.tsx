@@ -46,7 +46,11 @@ export const PortfolioCard: React.FC<{
       <Link href={href} ref={link.ref} className="block w-full h-full">
         <div className="absolute inset-0 z-0">
           {metaImage && typeof metaImage !== 'string' ? (
-            <Media resource={metaImage} size="33vw" className="w-full h-full object-cover" />
+            <Media
+              resource={metaImage}
+              size="33vw"
+              className="portfolio-card-image w-full h-full object-cover"
+            />
           ) : (
             <div className="w-full h-full bg-gray-200 flex items-center justify-center text-sm">
               No image
