@@ -203,6 +203,7 @@ export interface Page {
     | FormBlock
     | PortfolioGalleryBlock
     | AboutMeBlock
+    | TextAndImage
   )[];
   meta?: {
     title?: string | null;
@@ -847,7 +848,7 @@ export interface PortfolioGalleryBlock {
  * via the `definition` "AboutMeBlock".
  */
 export interface AboutMeBlock {
-  title: string;
+  title?: string | null;
   text?: {
     root: {
       type: string;
@@ -874,6 +875,32 @@ export interface AboutMeBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'aboutMe';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextAndImage".
+ */
+export interface TextAndImage {
+  text?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  imagePosition?: ('left' | 'right') | null;
+  media: number | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'textAndImage';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1176,6 +1203,7 @@ export interface PagesSelect<T extends boolean = true> {
         formBlock?: T | FormBlockSelect<T>;
         portfolioGallery?: T | PortfolioGalleryBlockSelect<T>;
         aboutMe?: T | AboutMeBlockSelect<T>;
+        textAndImage?: T | TextAndImageSelect<T>;
       };
   meta?:
     | T
@@ -1312,6 +1340,17 @@ export interface AboutMeBlockSelect<T extends boolean = true> {
         time?: T;
       };
   image?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextAndImage_select".
+ */
+export interface TextAndImageSelect<T extends boolean = true> {
+  text?: T;
+  imagePosition?: T;
+  media?: T;
   id?: T;
   blockName?: T;
 }

@@ -2,11 +2,14 @@ import type { CollectionConfig } from 'payload'
 
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
-import { Archive } from '../../blocks/ArchiveBlock/config'
-import { CallToAction } from '../../blocks/CallToAction/config'
-import { Content } from '../../blocks/Content/config'
-import { FormBlock } from '../../blocks/Form/config'
-import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { Archive } from '@/blocks/ArchiveBlock/config'
+import { CallToAction } from '@/blocks/CallToAction/config'
+import { Content } from '@/blocks/Content/config'
+import { FormBlock } from '@/blocks/Form/config'
+import { MediaBlock } from '@/blocks/MediaBlock/config'
+import { PortfolioGallery } from '@/blocks/PortfolioGallery/config'
+import { AboutMe } from '@/blocks/AboutMe/config'
+import { TextAndImageBlock } from '@/blocks/TextAndImage/config'
 import { hero } from '@/heros/config'
 import { slugField } from '@/fields/slug'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -20,9 +23,6 @@ import {
   OverviewField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
-
-import { PortfolioGallery } from '@/blocks/PortfolioGallery/config'
-import { AboutMe } from '@/blocks/AboutMe/config'
 
 export const Pages: CollectionConfig<'pages'> = {
   slug: 'pages',
@@ -86,6 +86,7 @@ export const Pages: CollectionConfig<'pages'> = {
                 FormBlock,
                 PortfolioGallery,
                 AboutMe,
+                TextAndImageBlock,
               ],
               required: true,
               admin: {

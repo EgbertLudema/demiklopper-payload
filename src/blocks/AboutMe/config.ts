@@ -11,7 +11,7 @@ export const AboutMe: Block = {
     {
       name: 'title',
       type: 'text',
-      required: true,
+      required: false,
     },
     {
       name: 'text',

@@ -31,7 +31,7 @@ export async function Footer() {
           </div>
 
           {/* Kolom 2 t/m 4 */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 w-full md:w-1/2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full md:w-1/2">
             {/* Menu vanuit navItems */}
             <div>
               <h4 className="text-lg font-semibold mb-4">Menu</h4>
@@ -78,7 +78,7 @@ export async function Footer() {
 
       {/* Onderste balk */}
       <div className="container py-6 px-2 border-t border-sky-600 flex flex-col md:flex-row justify-between items-center">
-        <div className="text-xs flex flex-col md:flex-row items-center gap-2 mb-4 md:mb-0">
+        <div className="text-xs flex flex-col md:flex-row items-center gap-2 md:mb-0">
           <p className="text-blue-300">&copy; {year} Demi Klopper. Alle rechten voorbehouden.</p>
           <p className="text-blue-300">
             Gerealiseerd door{' '}
@@ -92,7 +92,7 @@ export async function Footer() {
           </p>
         </div>
         {footerData.socials?.length > 0 && (
-          <div className="flex space-x-4">
+          <div className="hidden md:flex space-x-4">
             {footerData.socials.map((item, idx) => (
               <a
                 key={idx}

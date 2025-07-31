@@ -29,34 +29,61 @@ export const AboutMeBlock: React.FC<Props> = ({
   image,
 }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [scrollPos, setScrollPos] = useState(0)
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false)
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: e.clientX / window.innerWidth - 0.5,
-        y: e.clientY / window.innerHeight - 0.5,
-      })
+    const handleResize = () => {
+      setIsMobileOrTablet(window.innerWidth < 1024)
     }
 
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isMobileOrTablet) {
+        setMousePos({
+          x: e.clientX / window.innerWidth - 0.5,
+          y: e.clientY / window.innerHeight - 0.5,
+        })
+      }
+    }
+
+    const handleScroll = () => {
+      if (isMobileOrTablet) {
+        const scrollY = window.scrollY
+        const maxScroll = document.body.scrollHeight - window.innerHeight
+        const normalizedY = maxScroll > 0 ? scrollY / maxScroll - 0.5 : 0
+        setScrollPos(normalizedY)
+      }
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
     window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [isMobileOrTablet])
 
   return (
-    <section id="about" className="py-20">
+    <section id="about" className="py-16">
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           {/* Tekstgedeelte met animatie */}
           <motion.div
-            className="lg:w-5/12 order-2 lg:order-1"
+            className="w-full lg:w-5/12 order-2 lg:order-1"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            <h2 className="relative text-4xl font-bold mb-8 after:content-[''] after:block after:h-[3px] after:w-[70px] after:bg-sky-400 after:mt-2">
-              {title}
-            </h2>
+            {title && (
+              <h2 className="relative text-4xl font-bold mb-8 after:content-[''] after:block after:h-[3px] after:w-[70px] after:bg-sky-400 after:mt-2">
+                {title}
+              </h2>
+            )}
 
             {text && (
               <div className="text-neutral-700 mb-6 text-left">
@@ -103,7 +130,7 @@ export const AboutMeBlock: React.FC<Props> = ({
 
           {/* Afbeelding + Shapes met animatie */}
           <motion.div
-            className="lg:w-7/12 order-1 lg:order-2 relative"
+            className="lg:w-7/12 order-1 lg:order-2 relative mb-12 lg:mb-0"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
@@ -130,22 +157,22 @@ export const AboutMeBlock: React.FC<Props> = ({
 
             {/* Bewegende achtergrondelementen */}
             <motion.div
-              className="absolute -bottom-10 -left-10 w-48 h-48 bg-sky-600 rounded-xl opacity-20 -z-10"
+              className="absolute -bottom-10 -left-10 w-32 h-32 md:w-48 md:h-48 bg-sky-600 rounded-xl opacity-20 -z-10"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 0.2 }}
               animate={{
-                x: mousePos.x * 50,
-                y: mousePos.y * 50,
+                x: isMobileOrTablet ? 0 : mousePos.x * 50,
+                y: isMobileOrTablet ? scrollPos * 100 : mousePos.y * 50,
               }}
               transition={{ type: 'spring', stiffness: 50, damping: 20 }}
             />
             <motion.div
-              className="absolute -top-10 -right-10 w-32 h-32 bg-sky-400 rounded-xl opacity-20 -z-10"
+              className="absolute -top-10 -right-10 w-24 h-24 md:w-32 md:h-32 bg-sky-400 rounded-xl opacity-20 -z-10"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 0.2 }}
               animate={{
-                x: mousePos.x * 50,
-                y: mousePos.y * 50,
+                x: isMobileOrTablet ? 0 : mousePos.x * 50,
+                y: isMobileOrTablet ? scrollPos * 100 : mousePos.y * 50,
               }}
               transition={{ type: 'spring', stiffness: 50, damping: 20 }}
             />

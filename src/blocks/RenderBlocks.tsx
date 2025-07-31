@@ -9,6 +9,7 @@ import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { PortfolioGalleryBlock } from '@/blocks/PortfolioGallery/component'
 import { AboutMeBlock } from '@/blocks/AboutMe/component'
+import { TextAndImageBlock } from '@/blocks/TextAndImage/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -17,6 +18,7 @@ const blockComponents = {
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
   aboutMe: AboutMeBlock,
+  textAndImage: TextAndImageBlock,
   portfolioGallery: PortfolioGalleryBlock,
 }
 
