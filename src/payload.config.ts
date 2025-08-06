@@ -23,6 +23,8 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
 const isProd = process.env.NODE_ENV === 'production'
 
 export default buildConfig({
