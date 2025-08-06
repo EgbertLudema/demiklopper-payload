@@ -18,9 +18,12 @@ import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { Portfolio } from './collections/Portfolio'
 import { PortfolioCategories } from './collections/PortfolioCategories'
+import { postgresAdapter } from '@payloadcms/db-postgres'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+const isProd = process.env.NODE_ENV === 'production'
 
 export default buildConfig({
   admin: {
@@ -61,11 +64,17 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
-  db: sqliteAdapter({
-    client: {
-      url: process.env.DATABASE_URI || '',
-    },
-  }),
+  db: isProd
+    ? postgresAdapter({
+        pool: {
+          connectionString: process.env.DATABASE_URL || '',
+        },
+      })
+    : sqliteAdapter({
+        client: {
+          url: `file:${path.resolve(__dirname, './demiklopper.db')}`,
+        },
+      }),
   collections: [Pages, Posts, Portfolio, PortfolioCategories, Media, Categories, Users],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
