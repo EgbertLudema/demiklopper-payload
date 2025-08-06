@@ -46,12 +46,13 @@ export default async function Post({ params: paramsPromise }: Args) {
   const { slug = '' } = await paramsPromise
   const url = '/portfolio/' + slug
   const portfolio = await queryPostBySlug({ slug })
-  const relatedItems = await fetchRelatedItems({
-    categories: portfolio.categories ?? [],
-    currentId: portfolio.id,
-  })
 
   if (!portfolio) return <PayloadRedirects url={url} />
+
+  const relatedItems = await fetchRelatedItems({
+    categories: portfolio?.categories ?? [],
+    currentId: portfolio?.id ? String(portfolio.id) : '',
+  })
 
   return (
     <article>
@@ -196,8 +197,8 @@ const fetchRelatedItems = cache(
     })
 
     return result.docs.map((doc) => ({
-      id: doc.id,
-      slug: doc.slug,
+      id: doc.id ? String(doc.id) : '',
+      slug: doc.slug ? String(doc.slug) : '',
       title: doc.title,
       publishedOn: doc.publishedOn ?? '',
       categories: doc.categories ?? [],

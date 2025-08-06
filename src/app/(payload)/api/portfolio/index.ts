@@ -11,7 +11,7 @@ export async function GET(req: Request) {
 
   const payload = await getPayload({ config: configPromise })
 
-  const where = categoryId ? { categories: { in: [categoryId] } } : {}
+  const where = categoryId ? { categories: { in: [categoryId] } } : undefined
 
   const result = await payload.find({
     collection: 'portfolio',

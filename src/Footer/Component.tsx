@@ -36,7 +36,7 @@ export async function Footer() {
             <div>
               <h4 className="text-lg font-semibold mb-4">Menu</h4>
               <ul className="space-y-2">
-                {navItems.map((item, idx) => (
+                {(navItems ?? []).map((item, idx) => (
                   <li key={idx}>
                     <Link
                       href={item.link?.url || '#'}
@@ -91,9 +91,9 @@ export async function Footer() {
             </a>
           </p>
         </div>
-        {footerData.socials?.length > 0 && (
+        {(footerData.socials?.length ?? 0) > 0 && (
           <div className="hidden md:flex space-x-4">
-            {footerData.socials.map((item, idx) => (
+            {footerData.socials!.map((item, idx) => (
               <a
                 key={idx}
                 href={item.url}

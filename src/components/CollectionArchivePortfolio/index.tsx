@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { cn } from '@/utilities/ui'
 import { PortfolioCard } from '../CardPortfolio'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, easeOut, motion } from 'framer-motion'
 
 type Category = {
   id: string
@@ -13,7 +13,9 @@ type Category = {
 
 type Props = {
   items: any[]
-  categories: Category[]
+  categories: { id: string; title: string; slug: string }[]
+  activeCategory: string | null
+  setActiveCategory: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 const itemVariant = {
@@ -24,7 +26,7 @@ const itemVariant = {
     transition: {
       delay: i * 0.1,
       duration: 0.5,
-      ease: 'easeOut',
+      ease: easeOut,
     },
   }),
   exit: {
@@ -39,7 +41,9 @@ export const CollectionArchive: React.FC<Props> = ({ items = [], categories = []
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
   const filteredItems = activeCategory
-    ? items.filter((item) => item.categories?.some((cat) => cat.slug === activeCategory))
+    ? items.filter((item) =>
+        item.categories?.some((cat: { slug: string }) => cat.slug === activeCategory),
+      )
     : items
 
   return (

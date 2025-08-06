@@ -5,17 +5,22 @@ import useClickableCard from '@/utilities/useClickableCard'
 import Link from 'next/link'
 import React from 'react'
 
-import type { Post } from '@/payload-types'
+import type { Portfolio } from '@/payload-types'
 import { Media } from '@/components/Media'
 import { FiDownload, FiZoomIn } from 'react-icons/fi'
 
-export type CardPostData = Pick<Post, 'slug' | 'categories' | 'meta' | 'title' | 'publishedOn'>
+export type CardPostData = Omit<
+  Pick<Portfolio, 'slug' | 'categories' | 'meta' | 'title' | 'publishedOn'>,
+  'publishedOn'
+> & {
+  publishedOn?: string
+}
 
 export const PortfolioCard: React.FC<{
   alignItems?: 'center'
   className?: string
   doc?: CardPostData
-  relationTo?: 'posts' | 'portfolio'
+  relationTo?: 'portfolio'
   showCategories?: boolean
   title?: string
 }> = (props) => {
