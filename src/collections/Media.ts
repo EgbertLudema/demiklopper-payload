@@ -4,26 +4,51 @@ import {
   InlineToolbarFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
-import * as S3Mod from '@payloadcms/storage-s3'
-
-// Support both export styles across versions
-const s3Adapter = (S3Mod as any).s3Adapter ?? (S3Mod as any).default
 
 const isProd = process.env.NODE_ENV === 'production'
-const adapter = isProd
-  ? s3Adapter({
-      bucket: process.env.S3_BUCKET as string,
-      config: {
-        region: process.env.S3_REGION as string,
-        credentials: {
-          accessKeyId: process.env.S3_ACCESS_KEY_ID as string,
-          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY as string,
-        },
-        // Omit for AWS S3; set for R2/MinIO
-        ...(process.env.S3_ENDPOINT ? { endpoint: process.env.S3_ENDPOINT } : {}),
+
+async function getS3Adapter() {
+  // Only load in production
+  if (!isProd) return undefined
+
+  // Dynamically import so Next won’t statically analyze exports at build time
+  const mod: any = await import('@payloadcms/storage-s3')
+
+  // Try common shapes across versions
+  const factory =
+    mod?.s3Adapter || // named export (some versions)
+    mod?.default || // default export (other versions)
+    mod?.S3Adapter || // class constructor (fallback)
+    mod?.adapter || // generic name (rare)
+    null
+
+  const cfg = {
+    bucket: process.env.S3_BUCKET as string,
+    config: {
+      region: process.env.S3_REGION as string,
+      credentials: {
+        accessKeyId: process.env.S3_ACCESS_KEY_ID as string,
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY as string,
       },
-    })
-  : undefined
+      ...(process.env.S3_ENDPOINT ? { endpoint: process.env.S3_ENDPOINT } : {}),
+    },
+  }
+
+  if (typeof factory === 'function') {
+    // function-style factory
+    return factory(cfg)
+  }
+  if (factory && typeof factory === 'object' && typeof factory.constructor === 'function') {
+    // class-style export
+    return new factory(cfg)
+  }
+
+  throw new Error(
+    'Could not resolve an adapter factory from @payloadcms/storage-s3. Check package version.',
+  )
+}
+
+const adapter = await getS3Adapter()
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -48,7 +73,7 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    // Only set local dir in dev; Vercel prod uses S3 adapter
+    // Local FS in dev only; Vercel prod uses S3 adapter
     ...(isProd ? {} : { staticDir: 'public/media' }),
     adminThumbnail: 'thumbnail',
     focalPoint: true,
