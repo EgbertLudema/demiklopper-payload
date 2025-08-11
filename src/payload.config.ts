@@ -1,10 +1,8 @@
-// storage-adapter-import-placeholder
-import { sqliteAdapter } from '@payloadcms/db-sqlite'
-
-import sharp from 'sharp' // sharp-import
+import sharp from 'sharp'
 import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
+import { postgresAdapter } from '@payloadcms/db-postgres'
 
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
@@ -18,14 +16,14 @@ import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { Portfolio } from './collections/Portfolio'
 import { PortfolioCategories } from './collections/PortfolioCategories'
-import { postgresAdapter } from '@payloadcms/db-postgres'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
-const isProd = process.env.NODE_ENV === 'production'
+const databaseUrl = process.env.DATABASE_URL
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL is not defined')
+}
 
 export default buildConfig({
   admin: {
@@ -66,17 +64,12 @@ export default buildConfig({
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
-  db: isProd
-    ? postgresAdapter({
-        pool: {
-          connectionString: process.env.DATABASE_URL || '',
-        },
-      })
-    : sqliteAdapter({
-        client: {
-          url: `file:${path.resolve(__dirname, './demiklopper.db')}`,
-        },
-      }),
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+    },
+  }),
   collections: [Pages, Posts, Portfolio, PortfolioCategories, Media, Categories, Users],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],

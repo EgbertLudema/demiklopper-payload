@@ -69,7 +69,7 @@ export const AboutMeBlock: React.FC<Props> = ({
 
   return (
     <section id="about" className="py-16">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           {/* Tekstgedeelte met animatie */}
           <motion.div
@@ -161,8 +161,8 @@ export const AboutMeBlock: React.FC<Props> = ({
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 0.2 }}
               animate={{
-                x: isMobileOrTablet ? 0 : mousePos.x * 50,
-                y: isMobileOrTablet ? scrollPos * 100 : mousePos.y * 50,
+                x: isMobileOrTablet ? 0 : mousePos.x * 30,
+                y: isMobileOrTablet ? scrollPos * 80 : mousePos.y * 40,
               }}
               transition={{ type: 'spring', stiffness: 50, damping: 20 }}
             />
@@ -171,8 +171,8 @@ export const AboutMeBlock: React.FC<Props> = ({
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 0.2 }}
               animate={{
-                x: isMobileOrTablet ? 0 : mousePos.x * 50,
-                y: isMobileOrTablet ? scrollPos * 100 : mousePos.y * 50,
+                x: isMobileOrTablet ? 0 : mousePos.x * 30,
+                y: isMobileOrTablet ? scrollPos * 80 : mousePos.y * 40,
               }}
               transition={{ type: 'spring', stiffness: 50, damping: 20 }}
             />

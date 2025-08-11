@@ -48,6 +48,7 @@ export const Posts: CollectionConfig<'posts'> = {
     },
   },
   admin: {
+    hidden: true, // Hides the collection from the admin sidebar
     defaultColumns: ['title', 'slug', 'updatedAt'],
     livePreview: {
       url: ({ data, req }) => {
