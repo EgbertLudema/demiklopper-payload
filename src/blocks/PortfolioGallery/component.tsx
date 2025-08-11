@@ -34,7 +34,7 @@ export const PortfolioGalleryBlock = async ({
 
   const fetched = await payload.find({
     collection: 'portfolio',
-    where: categoryId ? { categories: { in: [categoryId] } } : undefined, // ✅ beter typed
+    where: categoryId ? { categories: { in: [categoryId] } } : undefined,
     limit,
     depth: 1,
     page: 1,
