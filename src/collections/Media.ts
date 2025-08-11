@@ -1,3 +1,4 @@
+// src/collections/Media.ts
 import type { CollectionConfig } from 'payload'
 import {
   FixedToolbarFeature,
@@ -7,56 +8,13 @@ import {
 
 const isProd = process.env.NODE_ENV === 'production'
 
-async function getS3Adapter() {
-  // Only load in production
-  if (!isProd) return undefined
-
-  // Dynamically import so Next won’t statically analyze exports at build time
-  const mod: any = await import('@payloadcms/storage-s3')
-
-  // Try common shapes across versions
-  const factory =
-    mod?.s3Adapter || // named export (some versions)
-    mod?.default || // default export (other versions)
-    mod?.S3Adapter || // class constructor (fallback)
-    mod?.adapter || // generic name (rare)
-    null
-
-  const cfg = {
-    bucket: process.env.S3_BUCKET as string,
-    config: {
-      region: process.env.S3_REGION as string,
-      credentials: {
-        accessKeyId: process.env.S3_ACCESS_KEY_ID as string,
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY as string,
-      },
-      ...(process.env.S3_ENDPOINT ? { endpoint: process.env.S3_ENDPOINT } : {}),
-    },
-  }
-
-  if (typeof factory === 'function') {
-    // function-style factory
-    return factory(cfg)
-  }
-  if (factory && typeof factory === 'object' && typeof factory.constructor === 'function') {
-    // class-style export
-    return new factory(cfg)
-  }
-
-  throw new Error(
-    'Could not resolve an adapter factory from @payloadcms/storage-s3. Check package version.',
-  )
-}
-
-const adapter = await getS3Adapter()
-
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
-    create: ({ req }) => Boolean(req.user),
-    delete: ({ req }) => Boolean(req.user),
     read: () => true,
-    update: ({ req }) => Boolean(req.user),
+    create: ({ req }) => !!req.user,
+    update: ({ req }) => !!req.user,
+    delete: ({ req }) => !!req.user,
   },
   fields: [
     { name: 'alt', type: 'text' },
@@ -73,8 +31,8 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    // Local FS in dev only; Vercel prod uses S3 adapter
-    ...(isProd ? {} : { staticDir: 'public/media' }),
+    // local disk only for dev; prod will be overridden by the plugin
+    ...(process.env.NODE_ENV === 'production' ? {} : { staticDir: 'public/media' }),
     adminThumbnail: 'thumbnail',
     focalPoint: true,
     imageSizes: [
@@ -86,6 +44,5 @@ export const Media: CollectionConfig = {
       { name: 'xlarge', width: 1920 },
       { name: 'og', width: 1200, height: 630, crop: 'center' },
     ],
-    ...(adapter ? { adapter } : {}),
   },
 }
