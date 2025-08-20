@@ -10,6 +10,7 @@ const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
 const nextConfig = {
   images: {
     remotePatterns: [{ protocol: 'https', hostname: '*.s3.eu-north-1.amazonaws.com' }],
+    domains: ['www.demi-k.nl', 'demi-k.nl', 'demi-k-media.s3.eu-north-1.amazonaws.com'],
   },
   reactStrictMode: true,
   redirects,
