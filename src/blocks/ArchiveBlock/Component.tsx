@@ -63,6 +63,10 @@ export const ArchiveBlock: React.FC<
         posts={posts.map((post) => ({
           ...post,
           publishedOn: (post as any).publishedOn ?? '',
+          showDownloadButton:
+            typeof (post as any).showDownloadButton === 'boolean'
+              ? (post as any).showDownloadButton
+              : undefined,
         }))}
       />
     </div>
