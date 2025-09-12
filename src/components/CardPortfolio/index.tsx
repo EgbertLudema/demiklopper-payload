@@ -10,10 +10,11 @@ import { Media } from '@/components/Media'
 import { FiDownload, FiZoomIn } from 'react-icons/fi'
 
 export type CardPostData = Omit<
-  Pick<Portfolio, 'slug' | 'categories' | 'meta' | 'title' | 'publishedOn'>,
+  Pick<Portfolio, 'slug' | 'categories' | 'meta' | 'title' | 'publishedOn' | 'showDownloadButton'>,
   'publishedOn'
 > & {
   publishedOn?: string
+  showDownloadButton?: boolean
 }
 
 export const PortfolioCard: React.FC<{
@@ -27,7 +28,7 @@ export const PortfolioCard: React.FC<{
   const { card, link } = useClickableCard({})
   const { className, doc, relationTo } = props
 
-  const { slug, meta, title, publishedOn } = doc || {}
+  const { slug, meta, title, publishedOn, showDownloadButton } = doc || {}
   const { image: metaImage } = meta || {}
 
   const href = `/${relationTo}/${slug}`
@@ -84,7 +85,7 @@ export const PortfolioCard: React.FC<{
             <FiZoomIn className="inline mr-1" />
             Bekijken
           </Link>
-          {downloadUrl && (
+          {showDownloadButton && downloadUrl && (
             <a
               href={downloadUrl}
               download

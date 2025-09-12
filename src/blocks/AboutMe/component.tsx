@@ -28,50 +28,45 @@ export const AboutMeBlock: React.FC<Props> = ({
   details,
   image,
 }) => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  // Scroll progress normalized to ~[-0.5, 0.5] across the page height
   const [scrollPos, setScrollPos] = useState(0)
-  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false)
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobileOrTablet(window.innerWidth < 1024)
-    }
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isMobileOrTablet) {
-        setMousePos({
-          x: e.clientX / window.innerWidth - 0.5,
-          y: e.clientY / window.innerHeight - 0.5,
-        })
-      }
-    }
+    let raf: number | null = null
 
     const handleScroll = () => {
-      if (isMobileOrTablet) {
-        const scrollY = window.scrollY
-        const maxScroll = document.body.scrollHeight - window.innerHeight
-        const normalizedY = maxScroll > 0 ? scrollY / maxScroll - 0.5 : 0
+      // Use rAF to avoid flooding state updates on fast scrolls
+      if (raf) cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => {
+        const doc = document.documentElement
+        const maxScroll = Math.max(1, doc.scrollHeight - doc.clientHeight)
+        const normalizedY = window.scrollY / maxScroll - 0.6
         setScrollPos(normalizedY)
-      }
+      })
     }
 
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('scroll', handleScroll)
+    // Initialize once on mount so elements are positioned correctly if user lands mid-page
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
 
     return () => {
-      window.removeEventListener('resize', handleResize)
-      window.removeEventListener('mousemove', handleMouseMove)
+      if (raf) cancelAnimationFrame(raf)
       window.removeEventListener('scroll', handleScroll)
     }
-  }, [isMobileOrTablet])
+  }, [])
+
+  // Tweak these multipliers to tune parallax strength
+  const imageY = scrollPos * 100 // main image subtle drift
+  const squareLeftX = scrollPos * -30
+  const squareLeftY = scrollPos * 80
+  const squareRightX = scrollPos * -10
+  const squareRightY = scrollPos * 40
 
   return (
     <section id="about" className="py-16">
       <div className="container mx-auto">
         <div className="flex flex-col lg:flex-row gap-12 items-center">
-          {/* Tekstgedeelte met animatie */}
+          {/* Text column */}
           <motion.div
             className="w-full lg:w-5/12 order-2 lg:order-1"
             initial={{ opacity: 0, y: 50 }}
@@ -128,7 +123,7 @@ export const AboutMeBlock: React.FC<Props> = ({
             </div>
           </motion.div>
 
-          {/* Afbeelding + Shapes met animatie */}
+          {/* Image + parallax shapes (scroll-driven on all devices) */}
           <motion.div
             className="lg:w-7/12 order-1 lg:order-2 relative mb-12 lg:mb-0"
             initial={{ opacity: 0, y: 50 }}
@@ -139,10 +134,8 @@ export const AboutMeBlock: React.FC<Props> = ({
             {image?.url && (
               <motion.div
                 className="w-full rounded-xl shadow-lg overflow-hidden"
-                animate={{
-                  x: mousePos.x * 20,
-                  y: mousePos.y * 20,
-                }}
+                // All movement now driven by scroll position
+                animate={{ y: imageY }}
                 transition={{ type: 'spring', stiffness: 80, damping: 20 }}
               >
                 <Image
@@ -155,25 +148,19 @@ export const AboutMeBlock: React.FC<Props> = ({
               </motion.div>
             )}
 
-            {/* Bewegende achtergrondelementen */}
+            {/* Background floating squares (also scroll-driven) */}
             <motion.div
               className="absolute -bottom-10 -left-10 w-32 h-32 md:w-48 md:h-48 bg-sky-600 rounded-xl opacity-20 -z-10"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 0.2 }}
-              animate={{
-                x: isMobileOrTablet ? 0 : mousePos.x * 30,
-                y: isMobileOrTablet ? scrollPos * 80 : mousePos.y * 40,
-              }}
+              animate={{ x: squareLeftX, y: squareLeftY }}
               transition={{ type: 'spring', stiffness: 50, damping: 20 }}
             />
             <motion.div
               className="absolute -top-10 -right-10 w-24 h-24 md:w-32 md:h-32 bg-sky-400 rounded-xl opacity-20 -z-10"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 0.2 }}
-              animate={{
-                x: isMobileOrTablet ? 0 : mousePos.x * 30,
-                y: isMobileOrTablet ? scrollPos * 80 : mousePos.y * 40,
-              }}
+              animate={{ x: squareRightX, y: squareRightY }}
               transition={{ type: 'spring', stiffness: 50, damping: 20 }}
             />
           </motion.div>

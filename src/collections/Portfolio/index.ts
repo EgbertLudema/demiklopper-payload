@@ -94,6 +94,16 @@ export const Portfolio: CollectionConfig = {
       },
     },
     {
+      name: 'showDownloadButton',
+      label: 'Show Download Button',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        description: 'Enable this to show a download button on the portfolio item.',
+        position: 'sidebar',
+      },
+    },
+    {
       name: 'meta',
       label: 'SEO',
       type: 'group',

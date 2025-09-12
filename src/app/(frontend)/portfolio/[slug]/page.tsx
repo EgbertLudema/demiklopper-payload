@@ -61,10 +61,10 @@ export default async function Post({ params: paramsPromise }: Args) {
       {draft && <LivePreviewListener />}
       <PortfolioHero portfolio={portfolio} />
 
-      {/* Content block */}
+      {/* Content section */}
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-6xl mx-auto">
-          {/* Prominente afbeelding */}
+          {/* Featured image */}
           {portfolio.image && typeof portfolio.image === 'object' && 'url' in portfolio.image && (
             <div className="mb-12">
               <Image
@@ -77,10 +77,10 @@ export default async function Post({ params: paramsPromise }: Args) {
             </div>
           )}
 
-          {/* Project info en download */}
+          {/* Project info and download */}
           <div className="max-w-4xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-              {/* Tekst en details - links */}
+              {/* Text and details - left */}
               <div className="lg:col-span-2 space-y-6">
                 {portfolio.content ? (
                   <div className="text-gray-700 text-lg">
@@ -124,22 +124,21 @@ export default async function Post({ params: paramsPromise }: Args) {
                 </div>
               </div>
 
-              {/* Download knop - rechts */}
-              {portfolio.image &&
+              {/* Download button - right (conditional on showDownloadButton) */}
+              {portfolio.showDownloadButton &&
+                portfolio.image &&
                 typeof portfolio.image === 'object' &&
-                'url' in portfolio.image && (
+                'url' in portfolio.image &&
+                portfolio.image.url && (
                   <div className="flex justify-center lg:justify-end">
-                    <DownloadButton
-                      imageUrl={portfolio.image.url ?? ''}
-                      title={portfolio.title || ''}
-                    />
+                    <DownloadButton imageUrl={portfolio.image.url} title={portfolio.title || ''} />
                   </div>
                 )}
             </div>
           </div>
         </div>
       </div>
-      {/* Add related posts using category */}
+      {/* Related posts by category */}
       <RelatedPortfolioSlider items={relatedItems} />
     </article>
   )
