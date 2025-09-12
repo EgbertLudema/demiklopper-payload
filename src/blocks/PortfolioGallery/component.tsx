@@ -3,11 +3,8 @@
 import { cookies } from 'next/headers'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
-
 import { AnimatedIntro } from '@/components/AnimatedIntro'
 import { ClientRenderer } from './ClientRenderer'
-
-// ✅ import als type
 import type { PortfolioGalleryBlock as PortfolioGalleryBlockType } from '@/payload-types'
 
 export const PortfolioGalleryBlock = async ({

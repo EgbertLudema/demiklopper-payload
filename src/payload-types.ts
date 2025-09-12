@@ -586,6 +586,7 @@ export interface Portfolio {
     image?: (number | null) | Media;
     description?: string | null;
   };
+  showDownloadButton?: boolean | null;
   slug?: string | null;
   slugLock?: boolean | null;
   updatedAt: string;
@@ -1409,6 +1410,7 @@ export interface PortfolioSelect<T extends boolean = true> {
         image?: T;
         description?: T;
       };
+  showDownloadButton?: T;
   slug?: T;
   slugLock?: T;
   updatedAt?: T;
