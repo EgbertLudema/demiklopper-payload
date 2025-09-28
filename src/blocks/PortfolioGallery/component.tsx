@@ -20,6 +20,7 @@ export const PortfolioGalleryBlock = async ({
 
   const payload = await getPayload({ config: configPromise })
 
+  // Only fetch categories (for the filter buttons)
   const categoriesRes = await payload.find({
     collection: 'portfolio-categories',
     limit: 100,
@@ -29,20 +30,11 @@ export const PortfolioGalleryBlock = async ({
   const categoryId = activeCategory?.id
   const limit = typeof limitFromProps === 'number' ? limitFromProps : 12
 
-  const fetched = await payload.find({
-    collection: 'portfolio',
-    where: categoryId ? { categories: { in: [categoryId] } } : undefined,
-    limit,
-    depth: 1,
-    page: 1,
-  })
-
   return (
     <div className="my-16" id={`block-${id}`}>
       {introContent && <AnimatedIntro introContent={introContent} />}
       <ClientRenderer
-        initialItems={fetched.docs}
-        initialTotalDocs={fetched.totalDocs}
+        initialTotalDocs={0}
         categories={categoriesRes.docs.map((cat) => ({
           id: String(cat.id),
           slug: cat.slug,
